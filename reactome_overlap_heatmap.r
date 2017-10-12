@@ -19,14 +19,14 @@ ontology <- "MsigdbC2REACTOME" ##choose ontology, here Reactome
 ###     group1 gene1
 ###     group1 gene2
 ###     group2 gene3 
-mydir <- "~/Downloads/sepsis_variance2/" ##change
-myfile <- "miru_annotated_check.csv"     ##change
+mydir <- "path/to/dir/" ##CHANGE HERE
+myfile <- "name_of_file.csv"     ##CHANGE HERE - here file with list of genes 
 
 
 myannotatedfile <- read.csv(paste(mydir,myfile,sep=""), as.is = TRUE) ##important to have as.is, no factors! 
 
 ##this is for the pathway enrichment analysis for Reactome by Group (comparison, cluster, whatever) 
-##takes a moment - go a grab some coffee! 
+##takes a moment - go to grab some coffee! 
 test_pathways <- myannotatedfile %>% 
   group_by(Cluster) %>% 
   do(as.data.frame(tryCatch(xEnrichViewer(xEnricherGenes(data=.$Gene_name,ontology=ontology,p.adjust.method="BH")),error=function(e)NA)))
