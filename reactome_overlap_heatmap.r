@@ -28,9 +28,11 @@ myannotatedfile <- read.csv(paste(mydir,myfile,sep=""), as.is = TRUE) ##importan
 
 ##this is for the pathway enrichment analysis for Reactome by Group (comparison, cluster, whatever) 
 ##takes a moment - go to grab some coffee! 
+##I have added a step to select pathways with a fdr < 0.05 (among the first 100, hopefully there are no more than a 100!)
+
 test_pathways <- myannotatedfile %>% 
-  group_by(Cluster) %>% 
-  do(as.data.frame(tryCatch(xEnrichViewer(xEnricherGenes(data=.$Gene_name,ontology=ontology,p.adjust.method="BH")),error=function(e)NA)))
+group_by(Cluster) %>% 
+do(as.data.frame(tryCatch(filter(xEnrichViewer(xEnricherGenes(data=.$Gene_name,ontology=ontology,p.adjust.method="BH"), sortBy = "fdr",100), adjp < 0.05),error=function(e)NA))) 
 
 
 ## we want a nice summary table with the name of the pathways and z-scores for each group
