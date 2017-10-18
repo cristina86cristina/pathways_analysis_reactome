@@ -6,6 +6,7 @@
 ###############################################################################################################################
 
 ###packages 
+library(tidyr)
 library(dplyr)
 library(XGR)
 library(pheatmap)
@@ -42,7 +43,7 @@ tidier <- test_pathways  %>% select(name,Cluster,zscore) %>%
 
 tidier[sapply(tidier, function(x) all(is.na(x)))] <- NULL # in my case I had clusters with no terms, so I need to get rid of them to make my heatmap tidier and prettier
 
-write.csv(tidier,paste(mydir,"tidier_pathway_forheatmap.csv",sep="") #we can write this as .csv so we dont need to rerun the enrichment analysis everytime
+write.csv(tidier,paste(mydir,"tidier_pathway_forheatmap.csv",sep="")) #we can write this as .csv so we dont need to rerun the enrichment analysis everytime
 
 ##getting ready for the overlap matrix
 #tidier <- read.csv("tidier_pathway_forheatmap.csv",as.is = TRUE)
@@ -92,7 +93,7 @@ pathways_nice_order_col <- colnames(pathways_nice_order)
 pdf(paste(mydir,"heatmap_pretty_order.pdf",sep=""),width = 10,height=9)
 heatord <- pheatmap(pathways_nice_order,
                     cluster_rows =res$tree_row$order,  ##this is the most important part, do not change this
-                    cluster_cols = T,
+                    cluster_cols = T, #if you want to cluster also the columns, might not make sense if you have 1 or very few of them 
                     fontsize = 8)
 dev.off()
 
