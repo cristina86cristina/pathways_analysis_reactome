@@ -81,11 +81,20 @@ res <- pheatmap(jacc_m,cluster_rows =T,cluster_cols = F,fontsize = 6) #get struc
 pathways_nice_order <- new_list
 #let's make a bit of order - some columns are not numeric and we dont need them
 pathways_nice_order$cluster<-NULL; pathways_nice_order$setID<-NULL;pathways_nice_order$namespace<-NULL;pathways_nice_order$distance<-NULL; pathways_nice_order$`NA`<-NULL
+#let's order the df according to Reactome clustering
+pathways_nice_order$order <- c(1:nrow(pathways_nice_order))
+order_react <- res$tree_row$order
+
+pathways_nice_order <- pathways_nice_order %>%
+  slice(match(order_react, order))
+
 
 #pathways_nice_order[sapply(pathways_nice_order, function(x) all(is.na(x)))] <- NULL
 pathways_nice_order[is.na(pathways_nice_order)] <- 0.000000000001 #change NA into 0s
 row.names(pathways_nice_order)<-pathways_nice_order$name #make col "name" into rownames
 pathways_nice_order$name<-NULL
+pathways_nice_order$order<-NULL
+
 
 #voila' - the heatmap! 
 
@@ -94,8 +103,8 @@ pathways_nice_order_col <- colnames(pathways_nice_order)
 
 pdf(paste(mydir,"heatmap_pretty_order.pdf",sep=""),width = 10,height=9)
 heatord <- pheatmap(pathways_nice_order,
-                    cluster_rows =res$tree_row$order,  ##this is the most important part, do not change this
-                    cluster_cols = T, #if you want to cluster also the columns, might not make sense if you have 1 or very few of them 
+                    cluster_rows = F,  ##this is the most important part, do not change this
+                    cluster_cols = F, #if you want to cluster also the columns, might not make sense if you have 1 or very few of them 
                     fontsize = 8)
 dev.off()
 
