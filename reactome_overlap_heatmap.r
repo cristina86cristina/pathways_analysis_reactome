@@ -34,6 +34,8 @@ test_pathways <- myannotatedfile %>%
 group_by(Cluster) %>% 
 do(as.data.frame(tryCatch(filter(xEnrichViewer(xEnricherGenes(data=.$Gene_name,ontology=ontology,p.adjust.method="BH"), sortBy = "fdr",100), adjp < 0.05),error=function(e)NA))) 
 
+write.csv(test_pathways,paste(mydir,"list_pathways_foreachcluster_reactome.csv",sep="")) #write .csv
+
 
 ## we want a nice summary table with the name of the pathways and z-scores for each group
 ## i.e. name Group1 Group2
